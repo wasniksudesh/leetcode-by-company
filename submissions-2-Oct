@@ -1,0 +1,20 @@
+class Solution:
+    def numTeams(self, rating: list[int]) -> int:
+        # all lower and all greater. two arrays 
+        # dp[index][chainCount]
+        n = len(rating)
+        dpHigh = [[1, 0, 0] for _ in range(n)]
+        dpLow = [[1, 0, 0] for _ in range(n)]
+        for i in range(n):
+            irating = rating[i]
+            for j in range(i):
+                jrating = rating[j]
+                if jrating > irating: 
+                    dpHigh[i][1] += dpHigh[j][0]
+                    dpHigh[i][2] += dpHigh[j][1] 
+                if jrating < irating : 
+                    dpLow[i][2] += dpLow[j][1]
+                    dpLow[i][1] += dpLow[j][0]
+        return sum([
+            dpLow[i][2] + dpHigh[i][2] for i in range(n)
+        ])
