@@ -1,0 +1,32 @@
+class Solution:
+    def bestTeamScore(self, scores: list[int], ages: list[int]) -> int:
+        # younger player score > older player score 
+        # highest overall score 
+        # sort pairs by age. then each age will tell me the maxlimit. i can select or ignore the age. 
+        # duplicates are also allowed. (their score might be diffrent)
+        # i can select all guys from same age ????/
+        # f(index, minLimit) => 
+        # choose (only if its score > minLimit) : f(index+1, score) + score 
+        # skip : f(index+1, minLimit)
+        n = len(scores)
+        pairs = [(scores[i], ages[i]) for i in range(n)]
+        pairs.sort(key=lambda x: (x[1], x[0]))
+        print(pairs)
+        # @cache
+        # def recur(index, minLimit):
+        #     if index >=n : return 0
+        #     # print(index, minLimit)
+        #     score, age = pairs[index]
+        #     if score < minLimit : return recur(index+1, minLimit)
+        #     return max(recur(index+1, minLimit) , recur(index+1, score) + score) 
+        
+        dp = [pairs[i][0] for i in range(n)]
+        for i in range(n):
+            score, age = pairs[i]
+            for j in range(i):
+                scorej, agej = pairs[j]
+                if score >= scorej :
+                    dp[i] = max(dp[j] + score , dp[i])
+        # print(dp)
+        return max(dp)
+
